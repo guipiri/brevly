@@ -1,5 +1,5 @@
 export class InvalidLinkFormatException extends Error {
   constructor() {
-    super('Invalid link format')
+    super('Invalid alias format')
   }
 }

@@ -2,6 +2,7 @@ import { db } from '@/infra/db'
 import { links } from '@/infra/db/schemas/links'
 import { eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { LinkNotFoundException } from './errors/link-not-found'
 
 const deleteLinkInput = z.object({
   alias: z.string(),
@@ -16,7 +17,7 @@ export const deleteLinkUseCase = async (input: DeleteLinkInput) => {
     where: eq(links.alias, alias),
   })
 
-  if (!aliasExists) throw new Error('Link not found')
+  if (!aliasExists) throw new LinkNotFoundException()
 
   const deletedLink = await db
     .delete(links)
