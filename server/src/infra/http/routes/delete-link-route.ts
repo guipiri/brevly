@@ -1,8 +1,9 @@
 import { deleteLinkUseCase } from '@/app/use-cases/delete-link'
+import { LinkNotFoundException } from '@/app/use-cases/errors/link-not-found'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
-export const deleteLinkRoute: FastifyPluginAsyncZod = async (server) => {
+export const deleteLinkRoute: FastifyPluginAsyncZod = async server => {
   server.delete(
     '/links/:alias',
     {
@@ -13,9 +14,17 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async (server) => {
     async (request, reply) => {
       const { alias } = request.params
 
-      const { deletedLink } = await deleteLinkUseCase({ alias })
-
-      reply.status(201).send({ deletedLink })
+      try {
+        const { deletedLink } = await deleteLinkUseCase({ alias })
+        reply.status(201).send({ deletedLink })
+      } catch (error) {
+        if (error instanceof LinkNotFoundException) {
+          return reply.status(404).send({
+            success: false,
+            message: error.message,
+          })
+        }
+      }
     }
   )
 }
