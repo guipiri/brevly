@@ -3,6 +3,7 @@ import { deleteLinkRoute } from './delete-link-route'
 import { fetchLinkRoute } from './fetch-links-route'
 import { getLinkByAliasRoute } from './get-link-by-alias'
 import { incrementeLinkCliksRoute } from './increment-link-clicks-route'
+import { uploadCsvToStorageRoute } from './upload-csv-to-storage-route'
 
 export const fastifyRoutes = [
   createLinkRoute,
@@ -10,4 +11,5 @@ export const fastifyRoutes = [
   fetchLinkRoute,
   getLinkByAliasRoute,
   incrementeLinkCliksRoute,
+  uploadCsvToStorageRoute,
 ]
