@@ -1,8 +1,8 @@
-import { incrementLinkClicksUseCase } from '@/app/use-cases/increment-link-clicks'
+import { incrementLinkClicksUseCase } from '@/app/use-cases/factories/make-drizzle-use-cases'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
-export const incrementeLinkCliksRoute: FastifyPluginAsyncZod = async server => {
+export const incrementLinkCliksRoute: FastifyPluginAsyncZod = async server => {
   server.post(
     '/links/:alias/increment-clicks',
     {
@@ -15,7 +15,7 @@ export const incrementeLinkCliksRoute: FastifyPluginAsyncZod = async server => {
     async (request, reply) => {
       const { alias } = request.params
 
-      const { link } = await incrementLinkClicksUseCase({ alias })
+      const link = await incrementLinkClicksUseCase.exec(alias)
       return reply.status(201).send({ link })
     }
   )

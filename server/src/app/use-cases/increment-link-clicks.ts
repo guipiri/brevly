@@ -1,31 +1,14 @@
-import { db } from '@/infra/db'
-import { links } from '@/infra/db/schemas/links'
-import { eq } from 'drizzle-orm'
-import { z } from 'zod'
+import type { LinksRepository } from '@/infra/repositories/links-repository'
 import { LinkNotFoundException } from './errors/link-not-found'
 
-const incrementLinkClicksInput = z.object({
-  alias: z.string(),
-})
+export class IncrementLinkUseCase {
+  constructor(private linksRepository: LinksRepository) {}
 
-type IncrementLinkClicksInput = z.infer<typeof incrementLinkClicksInput>
+  async exec(alias: string) {
+    const link = await this.linksRepository.incrementLinkClicks(alias)
 
-export const incrementLinkClicksUseCase = async (
-  input: IncrementLinkClicksInput
-) => {
-  const { alias } = incrementLinkClicksInput.parse(input)
+    if (!link) throw new LinkNotFoundException()
 
-  const link = await db.query.links.findFirst({
-    where: eq(links.alias, alias),
-  })
-
-  if (!link) throw new LinkNotFoundException()
-
-  const incrementedLink = await db
-    .update(links)
-    .set({ clicks: link.clicks + 1 })
-    .where(eq(links.alias, alias))
-    .returning()
-
-  return { link: incrementedLink[0] }
+    return link
+  }
 }

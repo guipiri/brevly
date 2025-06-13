@@ -1,5 +1,5 @@
-import { deleteLinkUseCase } from '@/app/use-cases/delete-link'
 import { LinkNotFoundException } from '@/app/use-cases/errors/link-not-found'
+import { deleteLinkUseCase } from '@/app/use-cases/factories/make-drizzle-use-cases'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
@@ -15,8 +15,8 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async server => {
       const { alias } = request.params
 
       try {
-        const { deletedLink } = await deleteLinkUseCase({ alias })
-        reply.status(201).send({ deletedLink })
+        const link = await deleteLinkUseCase.exec(alias)
+        reply.status(201).send({ link })
       } catch (error) {
         if (error instanceof LinkNotFoundException) {
           return reply.status(404).send({

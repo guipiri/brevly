@@ -1,6 +1,10 @@
-import { db } from '@/infra/db'
+import type { LinksRepository } from '@/infra/repositories/links-repository'
 
-export const fetchLinks = async () => {
-  const links = await db.query.links.findMany()
-  return { links }
+export class FetchLinksUseCase {
+  constructor(private linksRepository: LinksRepository) {}
+
+  async exec() {
+    const links = await this.linksRepository.fetchLinks()
+    return links
+  }
 }

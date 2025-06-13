@@ -1,4 +1,4 @@
-import { getLinkByAlias } from '@/app/use-cases/get-link-by-alias'
+import { getLinkByAliasUseCase } from '@/app/use-cases/factories/make-drizzle-use-cases'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
@@ -14,7 +14,7 @@ export const getLinkByAliasRoute: FastifyPluginAsyncZod = async server => {
     },
     async (request, reply) => {
       const alias = request.params.alias
-      const { link } = await getLinkByAlias({ alias })
+      const link = await getLinkByAliasUseCase.exec(alias)
 
       reply.status(201).send({ link })
     }
