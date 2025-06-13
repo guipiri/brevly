@@ -1,20 +1,26 @@
-import { db } from '@/infra/db'
-import { links } from '@/infra/db/schemas/links'
+import type { LinksRepository } from '@/infra/repositories/links-repository'
 import { uploadFileToStorage } from '@/infra/storage/upload-file-to-storage'
 import { write } from '@fast-csv/format'
 
-export const uploadCsvToStorage = async () => {
-  const res = await db.select().from(links)
-  const linksFormatted = res.map(link => {
-    return [link.id, link.url, link.alias, link.clicks, link.createdAt]
-  })
-  linksFormatted.unshift(['id', 'url', 'alias', 'clicks', 'createdAt'])
+export class UploadCsvToStorageUseCase {
+  constructor(private linksRepository: LinksRepository) {}
 
-  const csvStream = write(linksFormatted)
+  async exec() {
+    const links = await this.linksRepository.fetchLinks()
 
-  const { exportUrl } = await uploadFileToStorage({ contentStream: csvStream })
+    const linksFormatted = links.map(link => {
+      return [link.id, link.url, link.alias, link.clicks, link.createdAt]
+    })
+    linksFormatted.unshift(['id', 'url', 'alias', 'clicks', 'createdAt'])
 
-  return {
-    exportUrl,
+    const csvStream = write(linksFormatted)
+
+    const { exportUrl } = await uploadFileToStorage({
+      contentStream: csvStream,
+    })
+
+    return {
+      exportUrl,
+    }
   }
 }
