@@ -39,4 +39,13 @@ export class DrizzleLinksRepository implements LinksRepository {
       .returning()
     return incrementedLink[0]
   }
+
+  async delete(alias: string) {
+    const deletedLink = await this.drizzleClient
+      .delete(schema.links)
+      .where(eq(schema.links.alias, alias))
+      .returning()
+
+    return deletedLink[0]
+  }
 }
