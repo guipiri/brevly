@@ -4,7 +4,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 export const uploadCsvToStorageRoute: FastifyPluginAsyncZod = async server => {
   server.get('/links/export-csv', async (_, reply) => {
     const { exportUrl } = await uploadCsvToStorage()
-    return reply.status(201).send({
+    return reply.status(200).send({
       exportUrl,
     })
   })

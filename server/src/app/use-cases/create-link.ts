@@ -1,24 +1,24 @@
-import { db } from '@/infra/db'
-import { links } from '@/infra/db/schemas/links'
-import { eq } from 'drizzle-orm'
-import { InvalidLinkFormatException } from './errors/invalid-link-format'
+import type {
+  CreateLinkInput,
+  LinksRepository,
+} from '@/infra/repositories/links-repository'
 import { AliasAlreadyExistsException } from './errors/alias-link-already-exists'
+import { InvalidLinkFormatException } from './errors/invalid-link-format'
 
-type CreateLinkInput = typeof links.$inferInsert
+export class CreateLinkUseCase {
+  constructor(private linksRepository: LinksRepository) {}
 
-export const createLinkUseCase = async (input: CreateLinkInput) => {
-  const linkAlreadyExists = await db.query.links.findFirst({
-    where: eq(links.alias, input.alias),
-  })
+  async exec({ alias, url }: CreateLinkInput) {
+    const linkAlreadyExists = await this.linksRepository.findByAlias(alias)
 
-  if (linkAlreadyExists) throw new AliasAlreadyExistsException(input.alias)
+    if (linkAlreadyExists) throw new AliasAlreadyExistsException(alias)
 
-  const pattern = /^[a-zA-Z0-9]+$/
+    const pattern = /^[a-zA-Z0-9]+$/
+    const isAliasInValidFormat = pattern.test(alias)
+    if (!isAliasInValidFormat) throw new InvalidLinkFormatException()
 
-  const isAliasInValidFormat = pattern.test(input.alias)
+    const newLink = await this.linksRepository.create({ alias, url })
 
-  if (!isAliasInValidFormat) throw new InvalidLinkFormatException()
-
-  const newLink = await db.insert(links).values(input).returning()
-  return { createdLink: newLink[0] }
+    return newLink
+  }
 }

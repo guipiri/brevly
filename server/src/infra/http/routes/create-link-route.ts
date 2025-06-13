@@ -1,6 +1,6 @@
-import { createLinkUseCase } from '@/app/use-cases/create-link'
 import { AliasAlreadyExistsException } from '@/app/use-cases/errors/alias-link-already-exists'
 import { InvalidLinkFormatException } from '@/app/use-cases/errors/invalid-link-format'
+import { createLinkUseCase } from '@/app/use-cases/factories/make-drizzle-use-cases'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
@@ -19,8 +19,11 @@ export const createLinkRoute: FastifyPluginAsyncZod = async server => {
       const { url, alias } = request.body
 
       try {
-        const { createdLink } = await createLinkUseCase({ url, alias })
-        return reply.status(201).send({ createdLink })
+        const link = await createLinkUseCase.exec({
+          url,
+          alias,
+        })
+        return reply.status(201).send({ link })
       } catch (error) {
         if (error instanceof InvalidLinkFormatException) {
           return reply.status(400).send({
