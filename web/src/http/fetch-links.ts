@@ -1,5 +1,4 @@
 import { axiosClient } from './client/axios'
-import type { HttpClient } from './client/contract'
 import { linksRoute } from './routes'
 
 export interface ILink {
@@ -10,16 +9,7 @@ export interface ILink {
   createdAt: Date
 }
 
-export class FetchLinks {
-  httpClient: HttpClient
-  constructor(httpClient: HttpClient) {
-    this.httpClient = httpClient
-  }
-
-  async exec() {
-    const { links } = await this.httpClient.get<{ links: ILink[] }>(linksRoute)
-    return links
-  }
+export const fetchLinksWithAxios = async () => {
+  const res = await axiosClient.get<{ links: ILink[] }>(linksRoute)
+  return res.data
 }
-
-export const fetchLinksWithAxios = new FetchLinks(axiosClient)

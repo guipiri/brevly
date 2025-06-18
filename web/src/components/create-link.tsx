@@ -1,11 +1,30 @@
 import { WarningIcon } from '@phosphor-icons/react'
 import { createLinkWithAxios, type ICreateLink } from '../http/create-link'
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 function CreateLink() {
   const [createLinkPayload, setCreateLinkPayload] = useState<ICreateLink>({
     alias: '',
     url: '',
+  })
+
+  const createLink = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    await createLinkWithAxios(createLinkPayload)
+  }
+
+  const queryClient = useQueryClient()
+
+  const mutation = useMutation({
+    mutationFn: createLink,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['links'] })
+    },
+    onError: (error) => {
+      //Criar alerta personalizado
+      alert(error)
+    },
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,16 +33,11 @@ function CreateLink() {
     })
   }
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    await createLinkWithAxios.exec(createLinkPayload)
-  }
-
   return (
     <div className="p-6 max-w-[40rem] sm:max-w-[23.75rem] w-full bg-white rounded-sm flex flex-col gap-5">
       <h2 className="text-lg text-gray-600">Novo link</h2>
       <form
-        onSubmit={onSubmit}
+        onSubmit={mutation.mutate}
         onInvalid={(e) => e.preventDefault()}
         id="createLink"
         className="flex flex-col gap-4"

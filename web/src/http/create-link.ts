@@ -1,6 +1,4 @@
 import { axiosClient } from './client/axios'
-import type { HttpClient } from './client/contract'
-import type { ILink } from './fetch-links'
 import { linksRoute } from './routes'
 
 export interface ICreateLink {
@@ -8,19 +6,6 @@ export interface ICreateLink {
   alias: string
 }
 
-export class CreateLink {
-  httpClient: HttpClient
-  constructor(httpClient: HttpClient) {
-    this.httpClient = httpClient
-  }
-
-  async exec(body: ICreateLink) {
-    const { link } = await this.httpClient.post<{ link: ILink }>(
-      linksRoute,
-      body
-    )
-    return link
-  }
+export const createLinkWithAxios = async (input: ICreateLink) => {
+  await axiosClient.post(linksRoute, input)
 }
-
-export const createLinkWithAxios = new CreateLink(axiosClient)
