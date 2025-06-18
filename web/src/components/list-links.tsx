@@ -1,9 +1,10 @@
-import { DownloadSimpleIcon, LinkIcon } from '@phosphor-icons/react'
+import { DownloadSimpleIcon } from '@phosphor-icons/react'
 import Link from './link'
 import { useLinks } from '../hooks/useLinks'
+import LinksNotFound from './links-not-found'
 
 function ListLinks() {
-  const links = useLinks()
+  const { links, refetch } = useLinks()
   return (
     <div className="p-6 w-full max-w-[40rem] sm:max-w-[36.25rem] bg-white rounded-sm flex flex-col gap-4">
       <header className="flex items-center justify-between">
@@ -20,18 +21,10 @@ function ListLinks() {
 
       {links && links.length > 0 ? (
         links.map((link) => {
-          return <Link key={link.alias} link={link} />
+          return <Link key={link.alias} link={link} refetch={refetch} />
         })
       ) : (
-        <>
-          <hr className="border-gray-200" />
-          <div className="pt-4 pb-6 flex flex-col gap-3 items-center">
-            <LinkIcon size={32} className="fill-gray-400" />
-            <span className="text-xs text-gray-500 uppercase">
-              ainda não existem links cadastrados
-            </span>
-          </div>
-        </>
+        <LinksNotFound />
       )}
     </div>
   )

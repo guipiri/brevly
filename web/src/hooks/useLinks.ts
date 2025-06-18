@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { fetchLinksWithAxios, type ILink } from '../http/fetch-links'
 
 export function useLinks() {
-  const [links, setLinks] = useState<null | ILink[]>(null)
+  const [links, setLinks] = useState<ILink[]>([])
+  const [refresh, setRefresh] = useState<boolean>(false)
 
   const fetchLinks = async () => {
     const links = await fetchLinksWithAxios.exec()
@@ -11,7 +12,11 @@ export function useLinks() {
 
   useEffect(() => {
     fetchLinks()
-  }, [])
+  }, [refresh])
 
-  return links
+  const refetch = () => {
+    setRefresh(!refresh)
+  }
+
+  return { links, refetch }
 }
