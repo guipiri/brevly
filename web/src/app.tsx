@@ -3,6 +3,7 @@ import Home from './routes/home'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import Redirect from './routes/redirect'
 import NotFound from './routes/not-found'
+import GlobalLayout from './global-layout'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { experimental_prefetchInRender: true } },
@@ -13,9 +14,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/:alias" element={<Redirect />} />
-          <Route path="*" element={<NotFound />} />
+          <Route element={<GlobalLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/:alias" element={<Redirect />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
