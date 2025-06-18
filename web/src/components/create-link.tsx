@@ -1,8 +1,22 @@
 import { WarningIcon } from '@phosphor-icons/react'
+import { createLinkWithAxios, type ICreateLink } from '../http/create-link'
+import { useState } from 'react'
 
 function CreateLink() {
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [createLinkPayload, setCreateLinkPayload] = useState<ICreateLink>({
+    alias: '',
+    url: '',
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCreateLinkPayload((prev) => {
+      return { ...prev, [e.target.name]: e.target.value }
+    })
+  }
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    await createLinkWithAxios.exec(createLinkPayload)
   }
 
   return (
@@ -19,6 +33,7 @@ function CreateLink() {
             Link Original
           </label>
           <input
+            onChange={handleChange}
             className="px-4 rounded-sm text-md text-gray-600 font-sans font-normal ring-2 ring-gray-300 outline-none h-12 focus:ring-blue-base error:ring-danger user-invalid:ring-danger"
             name="url"
             id="url"
@@ -38,6 +53,7 @@ function CreateLink() {
           <div className="peer has-user-invalid:ring-danger has-focus:ring-blue-base ring-2 flex items-center px-4 rounded-sm text-gray-400 text-md font-sans font-normal ring-gray-300 h-12">
             brev.ly/
             <input
+              onChange={handleChange}
               className="outline-none h-full w-full text-md text-gray-600 font-normal"
               name="alias"
               id="alias"

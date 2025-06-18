@@ -15,8 +15,11 @@ export class CreateLink {
   }
 
   async exec(body: ICreateLink) {
-    const links = await this.httpClient.post<ILink>(linksRoute, body)
-    return links
+    const { link } = await this.httpClient.post<{ link: ILink }>(
+      linksRoute,
+      body
+    )
+    return link
   }
 }
 
