@@ -28,7 +28,10 @@ server.setErrorHandler((error, request, reply) => {
     .send({ success: false, message: 'Internal server error.' })
 })
 
-server.register(fastifyCors, { origin: '*' })
+server.register(fastifyCors, {
+  origin: '*',
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+})
 
 // Register routes
 for (const route of fastifyRoutes) {

@@ -15,8 +15,8 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async server => {
       const { alias } = request.params
 
       try {
-        const link = await deleteLinkUseCase.exec(alias)
-        reply.status(201).send({ link })
+        await deleteLinkUseCase.exec(alias)
+        reply.status(200)
       } catch (error) {
         if (error instanceof LinkNotFoundException) {
           return reply.status(404).send({
