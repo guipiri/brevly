@@ -3,6 +3,8 @@ import type { ILink } from '../http/fetch-links'
 import { deleteLinkWithAxios } from '../http/delete-link'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
+const baseUrl = import.meta.env.VITE_FRONTEND_URL
+
 function Link({ link }: { link: ILink }) {
   const queryClient = useQueryClient()
   const mutation = useMutation({
@@ -12,13 +14,15 @@ function Link({ link }: { link: ILink }) {
     },
   })
 
+  const shortLink = `${baseUrl}/${link.alias}`
+
   return (
     <div className="flex flex-col gap-4">
       <hr className="border-gray-200" />
       <div className="py-0.5 flex gap-4 justify-between items-center flex-nowrap">
         <div className="gap-1 grid">
-          <a className="text-blue-base text-md block truncate" href={link.url}>
-            {link.alias}
+          <a className="text-blue-base text-md block truncate" href={shortLink}>
+            {shortLink}
           </a>
           <span className="text-sm text-gray-500 truncate">{link.url}</span>
         </div>
@@ -32,6 +36,10 @@ function Link({ link }: { link: ILink }) {
         <div className="flex gap-1">
           <button className="aspect-square size-8 bg-gray-200 rounded-xs transition-all border border-gray-200 flex hover:border-blue-base hover:cursor-pointer">
             <CopyIcon
+              onClick={() => {
+                navigator.clipboard.writeText(shortLink)
+                alert('Link copiado para a área de transferência.')
+              }}
               size={16}
               weight="regular"
               className="fill-gray-600 m-auto"
