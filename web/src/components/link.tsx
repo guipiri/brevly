@@ -1,12 +1,16 @@
 import { CopyIcon, TrashIcon } from '@phosphor-icons/react'
 import type { ILink } from '../http/fetch-links'
 import { deleteLinkWithAxios } from '../http/delete-link'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-function Link({ link, refetch }: { link: ILink; refetch: () => void }) {
-  const deleteLinkByAlias = async (alias: string) => {
-    await deleteLinkWithAxios.exec(alias)
-    refetch()
-  }
+function Link({ link }: { link: ILink }) {
+  const queryClient = useQueryClient()
+  const mutation = useMutation({
+    mutationFn: deleteLinkWithAxios,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['links'] })
+    },
+  })
 
   return (
     <div className="flex flex-col gap-4">
@@ -35,7 +39,7 @@ function Link({ link, refetch }: { link: ILink; refetch: () => void }) {
           </button>
           <button className="aspect-square size-8 bg-gray-200 rounded-xs transition-all border border-gray-200 flex hover:border-blue-base hover:cursor-pointer">
             <TrashIcon
-              onClick={() => deleteLinkByAlias(link.alias)}
+              onClick={() => mutation.mutate(link.alias)}
               size={16}
               weight="regular"
               className="fill-gray-600 m-auto"

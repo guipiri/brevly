@@ -1,10 +1,17 @@
 import { DownloadSimpleIcon } from '@phosphor-icons/react'
 import Link from './link'
-import { useLinks } from '../hooks/useLinks'
 import LinksNotFound from './links-not-found'
+import { useQuery } from '@tanstack/react-query'
+import { fetchLinksWithAxios } from '../http/fetch-links'
 
 function ListLinks() {
-  const { links, refetch } = useLinks()
+  const query = useQuery({
+    queryKey: ['links'],
+    queryFn: fetchLinksWithAxios,
+  })
+
+  const links = query.data?.links || []
+
   return (
     <div className="p-6 w-full max-w-[40rem] sm:max-w-[36.25rem] bg-white rounded-sm flex flex-col gap-4">
       <header className="flex items-center justify-between">
@@ -21,7 +28,7 @@ function ListLinks() {
 
       {links && links.length > 0 ? (
         links.map((link) => {
-          return <Link key={link.alias} link={link} refetch={refetch} />
+          return <Link key={link.alias} link={link} />
         })
       ) : (
         <LinksNotFound />
