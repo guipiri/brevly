@@ -1,7 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import CreateLink from './components/create-link'
-import HomeHeader from './components/home-header'
-import ListLinks from './components/list-links'
+import Home from './routes/home'
+import { BrowserRouter, Route, Routes } from 'react-router'
+import Redirect from './routes/redirect'
+import NotFound from './routes/not-found'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { experimental_prefetchInRender: true } },
@@ -10,15 +11,13 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="p-2 bg-gray-200 h-dvh pt-8">
-        <HomeHeader />
-
-        <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:items-start">
-          <CreateLink />
-
-          <ListLinks />
-        </div>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/:alias" element={<Redirect />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </QueryClientProvider>
   )
 }
