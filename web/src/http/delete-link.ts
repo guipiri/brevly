@@ -1,6 +1,5 @@
 import { axiosClient } from './client/axios'
 import type { HttpClient } from './client/contract'
-import type { ILink } from './fetch-links'
 import { linksRoute } from './routes'
 
 export class DeleteLink {
@@ -10,9 +9,8 @@ export class DeleteLink {
   }
 
   async exec(alias: string) {
-    const link = await this.httpClient.delete<ILink>(`${linksRoute}/${alias}`)
-    return link
+    await this.httpClient.delete<void>(`${linksRoute}/${alias}`)
   }
 }
 
-export const createLinkWithAxios = new DeleteLink(axiosClient)
+export const deleteLinkWithAxios = new DeleteLink(axiosClient)

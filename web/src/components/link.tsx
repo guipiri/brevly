@@ -1,7 +1,13 @@
 import { CopyIcon, TrashIcon } from '@phosphor-icons/react'
 import type { ILink } from '../http/fetch-links'
+import { deleteLinkWithAxios } from '../http/delete-link'
 
-function Link({ link }: { link: ILink }) {
+function Link({ link, refetch }: { link: ILink; refetch: () => void }) {
+  const deleteLinkByAlias = async (alias: string) => {
+    await deleteLinkWithAxios.exec(alias)
+    refetch()
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <hr className="border-gray-200" />
@@ -29,6 +35,7 @@ function Link({ link }: { link: ILink }) {
           </button>
           <button className="aspect-square size-8 bg-gray-200 rounded-xs transition-all border border-gray-200 flex hover:border-blue-base hover:cursor-pointer">
             <TrashIcon
+              onClick={() => deleteLinkByAlias(link.alias)}
               size={16}
               weight="regular"
               className="fill-gray-600 m-auto"

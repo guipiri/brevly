@@ -17,9 +17,7 @@ export class FetchLinks {
   }
 
   async exec() {
-    const { links } = await this.httpClient.get<{ links: ILink[] | null }>(
-      linksRoute
-    )
+    const { links } = await this.httpClient.get<{ links: ILink[] }>(linksRoute)
     return links
   }
 }

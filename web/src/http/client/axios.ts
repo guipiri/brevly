@@ -16,8 +16,8 @@ export class AxiosClient implements HttpClient {
     return res.data
   }
 
-  async delete(route: string, body: unknown) {
-    const res = await this.axiosInstance.delete(route, { data: { body } })
+  async delete(route: string) {
+    const res = await this.axiosInstance.delete(route)
     return res.data
   }
 }
