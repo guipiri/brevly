@@ -12,7 +12,7 @@ export class AxiosClient implements HttpClient {
   }
 
   async post(route: string, body: unknown) {
-    const res = await this.axiosInstance.post(route, { body })
+    const res = await this.axiosInstance.post(route, body)
     return res.data
   }
 
