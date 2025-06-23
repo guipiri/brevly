@@ -18,8 +18,10 @@ function CreateLink() {
 
   const mutation = useMutation({
     mutationFn: createLink,
-    onSuccess: () => {
+    onSuccess: (_, { target }) => {
       queryClient.invalidateQueries({ queryKey: ['links'] })
+      alert('Link criado com sucesso')
+      ;(target as HTMLFormElement).reset()
     },
     onError: (error) => {
       //Criar alerta personalizado
@@ -85,10 +87,14 @@ function CreateLink() {
         </div>
       </form>
       <button
+        onInvalid={(e) => {
+          e.preventDefault()
+          console.log('invalid')
+        }}
         type="submit"
         form="createLink"
-        disabled={false}
         className="w-full bg-blue-base h-12 px-5 rounded-sm text-md text-white disabled:opacity-50 hover:bg-blue-dark hover:cursor-pointer transition-all"
+        disabled={mutation.status === 'pending'}
       >
         Salvar Link
       </button>
