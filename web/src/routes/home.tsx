@@ -6,7 +6,7 @@ function Home() {
   return (
     <>
       <HomeHeader />
-      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:items-start">
+      <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:items-start overflow-hidden flex-1">
         <CreateLink />
         <ListLinks />
       </div>

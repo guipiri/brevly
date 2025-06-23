@@ -13,7 +13,7 @@ function ListLinks() {
   const links = query.data?.links || []
 
   return (
-    <div className="p-6 w-full max-w-[40rem] sm:max-w-[36.25rem] bg-white rounded-sm flex flex-col gap-4">
+    <div className="p-6 w-full max-w-[40rem] sm:max-w-[36.25rem] bg-white rounded-sm flex flex-col gap-4 overflow-y-scroll h-full scrollbar scrollbar-w-1 scrollbar-thumb-blue-base scrollbar-thumb-rounded-4xl">
       <ListLinksHeader />
 
       {links && links.length > 0 ? (
