@@ -16,6 +16,7 @@ function App() {
         <Routes>
           <Route element={<GlobalLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/not-found" element={<NotFound />} />
             <Route path="/:alias" element={<Redirect />} />
             <Route path="*" element={<NotFound />} />
           </Route>
