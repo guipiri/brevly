@@ -38,7 +38,3 @@
   --radius-li: 1.25rem;
   --radius-xl: 1.75rem;
 }
-
-body::-webkit-scrollbar-thumb {
-  border-radius: 9999px; /* arredondamento aqui */
-}
