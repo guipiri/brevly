@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 @import 'tailwindcss';
+@plugin 'tailwind-scrollbar' {
+  nocompatible: true;
+}
 
 @theme {
   --color-blue-base: #2c46b1;
@@ -34,4 +37,8 @@
   --radius-lg: 1rem;
   --radius-li: 1.25rem;
   --radius-xl: 1.75rem;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 9999px; /* arredondamento aqui */
 }
