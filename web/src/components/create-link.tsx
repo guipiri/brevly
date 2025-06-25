@@ -2,6 +2,7 @@ import { WarningIcon } from '@phosphor-icons/react'
 import { createLinkWithAxios, type ICreateLink } from '../http/create-link'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import LoadingBar from './loading-bar'
 
 function CreateLink() {
   const [createLinkPayload, setCreateLinkPayload] = useState<ICreateLink>({
@@ -36,7 +37,8 @@ function CreateLink() {
   }
 
   return (
-    <div className="p-6 max-w-[40rem] sm:max-w-[23.75rem] w-full bg-white rounded-sm flex flex-col gap-5">
+    <div className="relative overflow-hidden p-6 max-w-[40rem] sm:max-w-[23.75rem] w-full bg-white rounded-sm flex flex-col gap-5">
+      <LoadingBar active={mutation.isPending} />
       <h2 className="text-lg text-gray-600">Novo link</h2>
       <form
         onSubmit={mutation.mutate}
@@ -86,18 +88,20 @@ function CreateLink() {
           </div>
         </div>
       </form>
-      <button
-        onInvalid={(e) => {
-          e.preventDefault()
-          console.log('invalid')
-        }}
-        type="submit"
-        form="createLink"
-        className="w-full bg-blue-base h-12 px-5 rounded-sm text-md text-white disabled:opacity-50 hover:bg-blue-dark hover:cursor-pointer transition-all"
-        disabled={mutation.status === 'pending'}
-      >
-        Salvar Link
-      </button>
+      <div>
+        <button
+          onInvalid={(e) => {
+            e.preventDefault()
+            console.log('invalid')
+          }}
+          type="submit"
+          form="createLink"
+          className="w-full bg-blue-base h-12 px-5 rounded-sm text-md text-white disabled:opacity-50 hover:bg-blue-dark hover:cursor-pointer transition-all"
+          disabled={mutation.status === 'pending'}
+        >
+          Salvar Link
+        </button>
+      </div>
     </div>
   )
 }

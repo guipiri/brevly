@@ -3,6 +3,7 @@ import type { ILink } from '../http/fetch-links'
 import { deleteLinkWithAxios } from '../http/delete-link'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { removeHttp } from '../utils/removeHttp'
+import LoadingBar from './loading-bar'
 
 const baseUrl = import.meta.env.VITE_FRONTEND_URL
 
@@ -15,12 +16,18 @@ function Link({ link }: { link: ILink }) {
     },
   })
 
+  const deleteLink = async (alias: string) => {
+    if (mutation.isPending) return
+    mutation.mutate(alias)
+  }
+
   const shortLink = `${baseUrl}/${link.alias}`
 
   const shortLinkFormated = removeHttp(shortLink)
 
   return (
     <div className="flex flex-col gap-4">
+      <LoadingBar active={mutation.isPending} />
       <hr className="border-gray-200" />
       <div className="py-0.5 flex gap-4 justify-between items-center flex-nowrap">
         <div className="gap-1 grid">
@@ -54,12 +61,18 @@ function Link({ link }: { link: ILink }) {
               className="fill-gray-600 m-auto"
             />
           </button>
-          <button className="aspect-square size-8 bg-gray-200 rounded-xs transition-all border border-gray-200 flex hover:border-blue-base hover:cursor-pointer">
+          <button
+            className={`aspect-square size-8 bg-gray-200 rounded-xs transition-all border border-gray-200 flex hover:border-blue-base hover:cursor-pointer ${
+              mutation.isPending && 'hover:border-gray-200'
+            }`}
+          >
             <TrashIcon
-              onClick={() => mutation.mutate(link.alias)}
+              onClick={() => deleteLink(link.alias)}
               size={16}
               weight="regular"
-              className="fill-gray-600 m-auto"
+              className={`fill-gray-600 m-auto ${
+                mutation.isPending && 'opacity-50'
+              }`}
             />
           </button>
         </div>

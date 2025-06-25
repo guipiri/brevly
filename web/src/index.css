@@ -37,4 +37,23 @@
   --radius-lg: 1rem;
   --radius-li: 1.25rem;
   --radius-xl: 1.75rem;
+
+  --animate-linear-loading: linear-loading 1s infinite ease-in-out;
+
+  @keyframes linear-loading {
+    0% {
+      left: -33%;
+      width: 50%;
+    }
+
+    50% {
+      left: 50%;
+      width: 50%;
+    }
+
+    100% {
+      left: 100%;
+      width: 0;
+    }
+  }
 }
