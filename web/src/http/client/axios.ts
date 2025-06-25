@@ -7,7 +7,11 @@ const axiosClient = axios.create({
 axiosClient.interceptors.response.use(
   (res) => res,
   (error) => {
-    return Promise.reject({ message: error.response?.data.message })
+    if (error.response?.data?.message) {
+      return Promise.reject({ message: error.response.data.message })
+    }
+
+    return Promise.reject('Erro no servidor, tente novamente mais tarde.')
   }
 )
 
