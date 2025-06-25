@@ -4,6 +4,7 @@ import { fetchLinksWithAxios } from '../http/fetch-links'
 import ListLinksHeader from './list-links-header'
 import LoadingBar from './loading-bar'
 import LinksNotFound from './links-not-found'
+import LoadingSpinner from './loading-spinner'
 
 function ListLinks() {
   const query = useQuery({
@@ -25,7 +26,7 @@ function ListLinks() {
         <ListLinksHeader />
         <div className="scrollbar scrollbar-w-1 scrollbar-thumb-blue-base scrollbar-thumb-rounded-full overflow-y-scroll flex flex-col gap-4 h-full px-1">
           {isLoading ? (
-            <p>Loading....</p>
+            <LoadingSpinner />
           ) : hasLinks ? (
             links.map((link) => {
               return <Link key={link.alias} link={link} />
