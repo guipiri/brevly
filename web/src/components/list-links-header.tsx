@@ -2,8 +2,10 @@ import { DownloadSimpleIcon } from '@phosphor-icons/react'
 import { getExportedCsvUrl } from '../http/get-exported-csv-url'
 import { useMutation } from '@tanstack/react-query'
 import LoadingBar from './loading-bar'
+import { useAlert } from '../contexts/AlertContext'
 
 function ListLinksHeader() {
+  const { showAlert } = useAlert()
   const exportCsv = async () => {
     const { exportUrl } = await getExportedCsvUrl()
     const a = document.createElement('a')
@@ -16,6 +18,12 @@ function ListLinksHeader() {
   const mutation = useMutation({
     mutationFn: exportCsv,
     mutationKey: ['export-csv'],
+    onError: ({ message }) => {
+      showAlert({ message, type: 'error' })
+    },
+    onSuccess: () => {
+      showAlert({ message: 'Exportação feita com sucesso!', type: 'success' })
+    },
   })
 
   return (
