@@ -3,12 +3,14 @@ import { createLinkWithAxios, type ICreateLink } from '../http/create-link'
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import LoadingBar from './loading-bar'
+import { useAlert } from '../contexts/AlertContext'
 
 function CreateLink() {
   const [createLinkPayload, setCreateLinkPayload] = useState<ICreateLink>({
     alias: '',
     url: '',
   })
+  const { showAlert } = useAlert()
 
   const createLink = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -21,12 +23,15 @@ function CreateLink() {
     mutationFn: createLink,
     onSuccess: (_, { target }) => {
       queryClient.invalidateQueries({ queryKey: ['links'] })
-      alert('Link criado com sucesso')
+      showAlert({
+        message: 'Link criado com sucesso',
+        type: 'success',
+        duration: 3000,
+      })
       ;(target as HTMLFormElement).reset()
     },
-    onError: (error) => {
-      //Criar alerta personalizado
-      alert(error)
+    onError: ({ message }) => {
+      showAlert({ message, type: 'error' })
     },
   })
 
@@ -77,7 +82,7 @@ function CreateLink() {
               id="alias"
               type="text"
               required
-              pattern="^[a-zA-Z0-9\-\&]+$"
+              pattern="^[a-zA-Z0-9_\-]+$"
             />
           </div>
           <div className="peer-has-user-invalid:flex peer-has-focus:hidden hidden text-sm text-gray-500 gap-2 items-center">

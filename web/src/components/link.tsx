@@ -4,15 +4,25 @@ import { deleteLinkWithAxios } from '../http/delete-link'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { removeHttp } from '../utils/removeHttp'
 import LoadingBar from './loading-bar'
+import { useAlert } from '../contexts/AlertContext'
 
 const baseUrl = import.meta.env.VITE_FRONTEND_URL
 
 function Link({ link }: { link: ILink }) {
+  const { showAlert } = useAlert()
+
   const queryClient = useQueryClient()
   const mutation = useMutation({
     mutationFn: deleteLinkWithAxios,
-    onSuccess: () => {
+    onSuccess: (_, alias) => {
       queryClient.invalidateQueries({ queryKey: ['links'] })
+      showAlert({
+        message: `Link '/${alias}' deletado com sucesso!`,
+        type: 'success',
+      })
+    },
+    onError: ({ message }) => {
+      showAlert({ message, type: 'error' })
     },
   })
 
@@ -54,7 +64,10 @@ function Link({ link }: { link: ILink }) {
             <CopyIcon
               onClick={() => {
                 navigator.clipboard.writeText(shortLink)
-                alert('Link copiado para a área de transferência.')
+                showAlert({
+                  message: 'Link copiado para a área de transferência.',
+                  type: 'success',
+                })
               }}
               size={16}
               weight="regular"
