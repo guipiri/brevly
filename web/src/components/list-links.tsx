@@ -13,16 +13,17 @@ function ListLinks() {
   const links = query.data?.links || []
 
   return (
-    <div className="scrollbar scrollbar-w-1 scrollbar-thumb-blue-base scrollbar-thumb-rounded-full p-6 w-full max-w-[40rem] sm:max-w-[36.25rem] bg-white rounded-sm flex flex-col gap-4 overflow-y-scroll h-full">
+    <div className="p-6 w-full max-w-[40rem] sm:max-w-[36.25rem] bg-white rounded-sm flex flex-col gap-4 h-full">
       <ListLinksHeader />
-
-      {links && links.length > 0 ? (
-        links.map((link) => {
-          return <Link key={link.alias} link={link} />
-        })
-      ) : (
-        <LinksNotFound />
-      )}
+      <div className="scrollbar scrollbar-w-1 scrollbar-thumb-blue-base scrollbar-thumb-rounded-full overflow-y-scroll flex flex-col gap-4 h-full px-1">
+        {links && links.length > 0 ? (
+          links.map((link) => {
+            return <Link key={link.alias} link={link} />
+          })
+        ) : (
+          <LinksNotFound />
+        )}
+      </div>
     </div>
   )
 }
