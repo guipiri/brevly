@@ -2,6 +2,7 @@ import { CopyIcon, TrashIcon } from '@phosphor-icons/react'
 import type { ILink } from '../http/fetch-links'
 import { deleteLinkWithAxios } from '../http/delete-link'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { removeHttp } from '../utils/removeHttp'
 
 const baseUrl = import.meta.env.VITE_FRONTEND_URL
 
@@ -16,15 +17,23 @@ function Link({ link }: { link: ILink }) {
 
   const shortLink = `${baseUrl}/${link.alias}`
 
+  const shortLinkFormated = removeHttp(shortLink)
+
   return (
     <div className="flex flex-col gap-4">
       <hr className="border-gray-200" />
       <div className="py-0.5 flex gap-4 justify-between items-center flex-nowrap">
         <div className="gap-1 grid">
-          <a className="text-blue-base text-md block truncate" href={shortLink}>
-            {shortLink}
+          <a
+            className="text-blue-base text-md block truncate"
+            target="_blank"
+            href={shortLink}
+          >
+            {shortLinkFormated}
           </a>
-          <span className="text-sm text-gray-500 truncate">{link.url}</span>
+          <span className="text-sm text-gray-500 truncate">
+            {removeHttp(link.url)}
+          </span>
         </div>
 
         <div className="ml-auto">
