@@ -5,6 +5,8 @@ import type {
 import { AliasAlreadyExistsException } from './errors/alias-link-already-exists'
 import { InvalidLinkFormatException } from './errors/invalid-link-format'
 
+export const aliasRegex = /^[a-zA-Z0-9_\-]+$/
+
 export class CreateLinkUseCase {
   constructor(private linksRepository: LinksRepository) {}
 
@@ -13,8 +15,7 @@ export class CreateLinkUseCase {
 
     if (linkAlreadyExists) throw new AliasAlreadyExistsException(alias)
 
-    const pattern = /^[a-zA-Z0-9]+$/
-    const isAliasInValidFormat = pattern.test(alias)
+    const isAliasInValidFormat = aliasRegex.test(alias)
     if (!isAliasInValidFormat) throw new InvalidLinkFormatException()
 
     const newLink = await this.linksRepository.create({ alias, url })
