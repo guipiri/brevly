@@ -25,6 +25,3 @@ dist-ssr
 
 # Env file
 .env
-
-# Testar a esteira antes de dar push
-.github
